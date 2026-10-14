@@ -1,0 +1,2103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Hotel Management System</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f7fb;
+            color: #172033;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            background: #102a43;
+            color: white;
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links button {
+            background: transparent;
+            color: white;
+            border: none;
+            padding: 9px 12px;
+            cursor: pointer;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .nav-links button:hover,
+        .nav-links button.active {
+            background: #1f4f78;
+        }
+
+        /* CONTAINER */
+        .container {
+            width: 92%;
+            max-width: 1250px;
+            margin: 30px auto;
+        }
+
+        /* PAGES */
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* HERO */
+        .hero {
+            background: linear-gradient(135deg, #102a43, #1976a8);
+            color: white;
+            padding: 35px;
+            border-radius: 18px;
+            margin-bottom: 25px;
+        }
+
+        .hero h1 {
+            margin-bottom: 10px;
+        }
+
+        /* CARDS */
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .card {
+            background: white;
+            padding: 22px;
+            border-radius: 14px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+        }
+
+        .card .icon {
+            font-size: 30px;
+        }
+
+        .card h3 {
+            margin: 10px 0;
+        }
+
+        .card h2 {
+            font-size: 30px;
+        }
+
+        /* PANEL */
+        .panel {
+            background: white;
+            padding: 22px;
+            border-radius: 14px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+            margin-bottom: 20px;
+        }
+
+        .panel h2 {
+            margin-bottom: 18px;
+        }
+
+        /* GRID */
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 20px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        /* FORM */
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #ccd5df;
+            border-radius: 8px;
+            font-size: 15px;
+            margin-bottom: 12px;
+        }
+
+        button.main-btn {
+            width: 100%;
+            padding: 11px;
+            border: none;
+            border-radius: 8px;
+            background: #1261a0;
+            color: white;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        button.main-btn:hover {
+            background: #0d4f84;
+        }
+
+        /* TABLE */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        th {
+            background: #eef4f8;
+        }
+
+        /* BUTTONS */
+        .small-btn {
+            padding: 7px 10px;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            background: #1261a0;
+            cursor: pointer;
+            margin: 2px;
+        }
+
+        .green {
+            background: #16803c;
+        }
+
+        .red {
+            background: #b42318;
+        }
+
+        .gray {
+            background: #667085;
+        }
+
+        /* STATUS */
+        .status {
+            padding: 5px 9px;
+            border-radius: 20px;
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .occupied {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .booked {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        /* WORKFLOW */
+        .workflow {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            background: #eef6fb;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .workflow span {
+            background: white;
+            padding: 10px 14px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        /* BILL */
+        .invoice {
+            border-left: 5px solid #1261a0;
+        }
+
+        .invoice p {
+            margin: 12px 0;
+        }
+
+        .total {
+            font-size: 25px;
+            margin: 20px 0;
+        }
+
+        /* LOGIN */
+        #loginPage {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, #102a43, #1976a8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .login-card {
+            width: 390px;
+            background: white;
+            padding: 35px;
+            border-radius: 18px;
+            text-align: center;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.3);
+        }
+
+        .hotel-icon {
+            font-size: 55px;
+            margin-bottom: 10px;
+        }
+
+        .login-card h1 {
+            margin-bottom: 8px;
+        }
+
+        .login-card p {
+            margin-bottom: 20px;
+        }
+
+        .demo {
+            margin-top: 15px;
+            font-size: 13px;
+            color: #667085;
+        }
+
+        /* RESPONSIVE */
+        @media(max-width: 900px) {
+            .cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media(max-width: 600px) {
+            .cards {
+                grid-template-columns: 1fr;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .login-card {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+
+<!-- ================= LOGIN ================= -->
+
+<div id="loginPage">
+
+    <div class="login-card">
+
+        <div class="hotel-icon">🏨</div>
+
+        <h1>Hotel Management</h1>
+
+        <p>Admin Login</p>
+
+        <input
+            type="text"
+            id="username"
+            placeholder="Username"
+            autocomplete="username"
+            required
+        >
+
+        <input
+            type="password"
+            id="password"
+            placeholder="Password"
+            autocomplete="current-password"
+            required
+        >
+
+        <button class="main-btn" onclick="login()">
+            Login
+        </button>
+
+        <div class="demo">
+            Demo Login: <b>admin</b> / <b>admin123</b>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ================= MAIN SYSTEM ================= -->
+
+<div id="mainSystem" style="display:none;">
+
+
+    <!-- NAVBAR -->
+
+    <nav class="navbar">
+
+        <div class="logo">
+            🏨 Hotel Management System
+        </div>
+
+        <div class="nav-links">
+
+            <button onclick="showPage('dashboard',this)"
+                    class="active">
+                Dashboard
+            </button>
+
+            <button onclick="showPage('rooms',this)">
+                Rooms
+            </button>
+
+            <button onclick="showPage('customers',this)">
+                Customers
+            </button>
+
+            <button onclick="showPage('bookings',this)">
+                Bookings
+            </button>
+
+            <button id="billingNav" onclick="showPage('billing',this)">
+                Billing
+            </button>
+
+            <button onclick="showPage('reports',this)">
+                Reports
+            </button>
+
+            <button onclick="logout()" class="red">
+                Logout
+            </button>
+
+        </div>
+
+    </nav>
+
+
+    <main class="container">
+
+
+        <!-- ================= DASHBOARD ================= -->
+
+        <section id="dashboard" class="page active">
+
+            <div class="hero">
+
+                <h1>Hotel Management Dashboard</h1>
+
+                <p>
+                    Manage rooms, customers, reservations,
+                    check-in, check-out and billing.
+                </p>
+
+            </div>
+
+
+            <div class="cards">
+
+                <div class="card">
+
+                    <div class="icon">🏨</div>
+
+                    <h3>Total Rooms</h3>
+
+                    <h2 id="totalRooms">8</h2>
+
+                </div>
+
+
+                <div class="card">
+
+                    <div class="icon">🟢</div>
+
+                    <h3>Available Rooms</h3>
+
+                    <h2 id="availableRooms">8</h2>
+
+                </div>
+
+
+                <div class="card">
+
+                    <div class="icon">👤</div>
+
+                    <h3>Customers</h3>
+
+                    <h2 id="totalCustomers">0</h2>
+
+                </div>
+
+
+                <div class="card">
+
+                    <div class="icon">📅</div>
+
+                    <h3>Bookings</h3>
+
+                    <h2 id="totalBookings">0</h2>
+
+                </div>
+
+            </div>
+
+
+            <div class="panel">
+
+                <h2>System Workflow</h2>
+
+                <div class="workflow">
+
+                    <span>Admin Login</span>
+
+                    <b>→</b>
+
+                    <span>Customer Details</span>
+
+                    <b>→</b>
+
+                    <span>Room Status</span>
+
+                    <b>→</b>
+
+                    <span>Booking</span>
+
+                    <b>→</b>
+
+                    <span>Check-In</span>
+
+                    <b>→</b>
+
+                    <span>Services</span>
+
+                    <b>→</b>
+
+                    <span>Bill</span>
+
+                    <b>→</b>
+
+                    <span>Check-Out</span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================= ROOMS ================= -->
+
+        <section id="rooms" class="page">
+
+            <h1>Room Management</h1>
+
+            <br>
+
+
+            <div class="two-column">
+
+
+                <div class="panel">
+
+                    <h2>Add New Room</h2>
+
+                    <input
+                        type="text"
+                        id="roomNo"
+                        placeholder="Room Number"
+                    >
+
+                    <select id="roomType">
+
+                        <option>Single</option>
+                        <option>Double</option>
+                        <option>Deluxe</option>
+                        <option>Suite</option>
+
+                    </select>
+
+                    <input
+                        type="number"
+                        id="roomPrice"
+                        placeholder="Price Per Night"
+                    >
+
+                    <button
+                        class="main-btn"
+                        onclick="addRoom()"
+                    >
+                        Add Room
+                    </button>
+
+                </div>
+
+
+                <div class="panel">
+
+                    <h2>Room Status</h2>
+
+                    <div class="table-container">
+
+                        <table>
+
+                            <thead>
+
+                                <tr>
+                                    <th>Room</th>
+                                    <th>Type</th>
+                                    <th>Price</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody id="roomTable">
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================= CUSTOMERS ================= -->
+
+        <section id="customers" class="page">
+
+            <h1>Customer Management</h1>
+
+            <br>
+
+
+            <div class="panel">
+
+                <h2>Add Customer</h2>
+
+                <div class="form-grid">
+
+                    <input
+                        type="text"
+                        id="customerName"
+                        placeholder="Full Name"
+                    >
+
+                    <input
+                        type="text"
+                        id="customerPhone"
+                        placeholder="Phone Number"
+                    >
+
+                    <input
+                        type="email"
+                        id="customerEmail"
+                        placeholder="Email"
+                    >
+
+                    <input
+                        type="text"
+                        id="customerId"
+                        placeholder="ID Proof"
+                    >
+
+                    <input
+                        type="text"
+                        id="customerAddress"
+                        placeholder="Address"
+                    >
+
+                </div>
+
+                <button
+                    class="main-btn"
+                    onclick="addCustomer()"
+                >
+                    Add Customer
+                </button>
+
+            </div>
+
+
+            <div class="panel">
+
+                <h2>Customer Records</h2>
+
+                <div class="table-container">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Phone</th>
+                                <th>Email</th>
+                                <th>ID Proof</th>
+                                <th>Address</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="customerTable">
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================= BOOKINGS ================= -->
+
+        <section id="bookings" class="page">
+
+            <h1>Booking Management</h1>
+
+            <br>
+
+
+            <div class="panel">
+
+                <h2>New Room Reservation</h2>
+
+                <div class="form-grid">
+
+                    <select id="bookingCustomer">
+
+                        <option value="">
+                            Select Customer
+                        </option>
+
+                    </select>
+
+
+                    <select id="bookingRoom">
+
+                        <option value="">
+                            Select Available Room
+                        </option>
+
+                    </select>
+
+
+                    <div>
+
+                        <label>Check-In</label>
+
+                        <input
+                            type="date"
+                            id="checkIn"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div>
+
+                        <label>Check-Out</label>
+
+                        <input
+                            type="date"
+                            id="checkOut"
+                            required
+                        >
+
+                    </div>
+
+
+                    <input
+                        type="number"
+                        id="guestCount"
+                        value="1"
+                        min="1"
+                        placeholder="Guests"
+                    >
+
+                </div>
+
+
+                <button
+                    class="main-btn"
+                    onclick="addBooking()"
+                >
+                    Create Booking
+                </button>
+
+            </div>
+
+
+            <div class="panel">
+
+                <h2>Booking Records</h2>
+
+                <div class="table-container">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>ID</th>
+                                <th>Customer</th>
+                                <th>Room</th>
+                                <th>Check-In</th>
+                                <th>Check-Out</th>
+                                <th>Guests</th>
+                                <th>Status</th>
+                                <th>Action</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="bookingTable">
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================= BILLING ================= -->
+
+        <section id="billing" class="page">
+
+            <h1>Billing Management</h1>
+
+            <br>
+
+
+            <div class="two-column">
+
+
+                <div class="panel">
+
+                    <h2>Additional Services</h2>
+
+                    <select id="billingBooking">
+                        <option value="">Select Booking</option>
+                    </select>
+
+                    <input
+                        type="text"
+                        id="serviceName"
+                        placeholder="Service Name"
+                    >
+
+                    <input
+                        type="number"
+                        id="serviceAmount"
+                        placeholder="Amount"
+                    >
+
+                    <button
+                        class="main-btn"
+                        onclick="addService()"
+                    >
+                        Add Service
+                    </button>
+
+
+                    <br><br>
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+                                <th>Service</th>
+                                <th>Amount</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="serviceTable">
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+                <div class="panel invoice">
+
+                    <h2>Hotel Invoice</h2>
+
+                    <p>
+                        Room Charges:
+                        ₹<span id="roomCharges">0</span>
+                    </p>
+
+                    <p>
+                        Service Charges:
+                        ₹<span id="serviceCharges">0</span>
+                    </p>
+
+                    <hr>
+
+                    <h2 class="total">
+
+                        Total:
+                        ₹<span id="grandTotal">0</span>
+
+                    </h2>
+
+                    <label for="paidAmount">Amount Paid</label>
+                    <input
+                        type="number"
+                        id="paidAmount"
+                        min="0"
+                        step="0.01"
+                        value="0"
+                    >
+
+                    <button
+                        class="main-btn"
+                        onclick="saveBill()"
+                    >
+                        Save Bill
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================= REPORTS ================= -->
+
+        <section id="reports" class="page">
+
+            <h1>Hotel Reports</h1>
+
+            <br>
+
+
+            <div class="panel">
+
+                <h2>Booking & Billing Records</h2>
+
+                <div class="table-container">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>Booking</th>
+                                <th>Customer</th>
+                                <th>Room</th>
+                                <th>Check-In</th>
+                                <th>Check-Out</th>
+                                <th>Status</th>
+                                <th>Total</th>
+                                <th>Payment</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="reportTable">
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+</div>
+
+
+
+<!-- ================= JAVASCRIPT ================= -->
+
+<script type="text/plain">
+
+    let rooms = [
+        {
+            id: 1,
+            room: "101",
+            type: "Single",
+            price: 1200,
+            status: "Available"
+        },
+        {
+            id: 2,
+            room: "102",
+            type: "Single",
+            price: 1200,
+            status: "Available"
+        },
+        {
+            id: 3,
+            room: "201",
+            type: "Double",
+            price: 1800,
+            status: "Available"
+        },
+        {
+            id: 4,
+            room: "202",
+            type: "Double",
+            price: 1800,
+            status: "Available"
+        },
+        {
+            id: 5,
+            room: "301",
+            type: "Deluxe",
+            price: 2500,
+            status: "Available"
+        },
+        {
+            id: 6,
+            room: "302",
+            type: "Deluxe",
+            price: 2500,
+            status: "Available"
+        },
+        {
+            id: 7,
+            room: "401",
+            type: "Suite",
+            price: 4000,
+            status: "Available"
+        },
+        {
+            id: 8,
+            room: "402",
+            type: "Suite",
+            price: 4000,
+            status: "Available"
+        }
+    ];
+
+
+    let customers = [];
+
+    let bookings = [];
+
+    let services = [];
+
+    let bookingId = 1;
+
+    let customerId = 1;
+
+    let serviceTotal = 0;
+
+
+
+    /* LOGIN */
+
+    function login() {
+
+        let username =
+            document.getElementById("username").value;
+
+        let password =
+            document.getElementById("password").value;
+
+
+        if (
+            username === "admin" &&
+            password === "admin123"
+        ) {
+
+            document.getElementById(
+                "loginPage"
+            ).style.display = "none";
+
+            document.getElementById(
+                "mainSystem"
+            ).style.display = "block";
+
+            renderRooms();
+
+        } else {
+
+            alert(
+                "Invalid username or password"
+            );
+
+        }
+
+    }
+
+
+
+    /* LOGOUT */
+
+    function logout() {
+
+        document.getElementById(
+            "loginPage"
+        ).style.display = "flex";
+
+        document.getElementById(
+            "mainSystem"
+        ).style.display = "none";
+
+    }
+
+
+
+    /* PAGE NAVIGATION */
+
+    function showPage(pageId, button) {
+
+        document
+            .querySelectorAll(".page")
+            .forEach(page => {
+                page.classList.remove("active");
+            });
+
+
+        document
+            .getElementById(pageId)
+            .classList.add("active");
+
+
+        document
+            .querySelectorAll(".nav-links button")
+            .forEach(btn => {
+                btn.classList.remove("active");
+            });
+
+
+        button.classList.add("active");
+
+
+        if (pageId === "rooms")
+            renderRooms();
+
+        if (pageId === "customers")
+            renderCustomers();
+
+        if (pageId === "bookings") {
+            updateBookingOptions();
+            renderBookings();
+        }
+
+        if (pageId === "reports")
+            renderReports();
+
+    }
+
+
+
+    /* ADD ROOM */
+
+    function addRoom() {
+
+        let roomNo =
+            document.getElementById("roomNo").value;
+
+        let roomType =
+            document.getElementById("roomType").value;
+
+        let price =
+            document.getElementById("roomPrice").value;
+
+
+        if (
+            roomNo === "" ||
+            price === ""
+        ) {
+
+            alert("Please fill all fields");
+
+            return;
+
+        }
+
+
+        rooms.push({
+
+            id: rooms.length + 1,
+
+            room: roomNo,
+
+            type: roomType,
+
+            price: Number(price),
+
+            status: "Available"
+
+        });
+
+
+        document.getElementById(
+            "roomNo"
+        ).value = "";
+
+        document.getElementById(
+            "roomPrice"
+        ).value = "";
+
+
+        renderRooms();
+
+        updateDashboard();
+
+        alert("Room added successfully");
+
+    }
+
+
+
+    /* DISPLAY ROOMS */
+
+    function renderRooms() {
+
+        let table =
+            document.getElementById(
+                "roomTable"
+            );
+
+        table.innerHTML = "";
+
+
+        rooms.forEach(room => {
+
+            let statusClass =
+                room.status === "Available"
+                ? ""
+                : room.status === "Booked"
+                ? "booked"
+                : "occupied";
+
+
+            table.innerHTML += `
+
+                <tr>
+
+                    <td>${room.room}</td>
+
+                    <td>${room.type}</td>
+
+                    <td>₹${room.price}</td>
+
+                    <td>
+                        <span class="status ${statusClass}">
+                            ${room.status}
+                        </span>
+                    </td>
+
+                </tr>
+
+            `;
+
+        });
+
+
+        updateDashboard();
+
+    }
+
+
+
+    /* ADD CUSTOMER */
+
+    function addCustomer() {
+
+        let name =
+            document.getElementById(
+                "customerName"
+            ).value;
+
+        let phone =
+            document.getElementById(
+                "customerPhone"
+            ).value;
+
+        let email =
+            document.getElementById(
+                "customerEmail"
+            ).value;
+
+        let idProof =
+            document.getElementById(
+                "customerId"
+            ).value;
+
+        let address =
+            document.getElementById(
+                "customerAddress"
+            ).value;
+
+
+        if (name === "") {
+
+            alert("Enter customer name");
+
+            return;
+
+        }
+
+
+        customers.push({
+
+            id: customerId++,
+
+            name: name,
+
+            phone: phone,
+
+            email: email,
+
+            idProof: idProof,
+
+            address: address
+
+        });
+
+
+        document
+            .getElementById("customerName")
+            .value = "";
+
+        document
+            .getElementById("customerPhone")
+            .value = "";
+
+        document
+            .getElementById("customerEmail")
+            .value = "";
+
+        document
+            .getElementById("customerId")
+            .value = "";
+
+        document
+            .getElementById("customerAddress")
+            .value = "";
+
+
+        renderCustomers();
+
+        updateBookingOptions();
+
+        updateDashboard();
+
+        alert("Customer added successfully");
+
+    }
+
+
+
+    /* DISPLAY CUSTOMERS */
+
+    function renderCustomers() {
+
+        let table =
+            document.getElementById(
+                "customerTable"
+            );
+
+        table.innerHTML = "";
+
+
+        customers.forEach(customer => {
+
+            table.innerHTML += `
+
+                <tr>
+
+                    <td>${customer.id}</td>
+
+                    <td>${customer.name}</td>
+
+                    <td>${customer.phone}</td>
+
+                    <td>${customer.email}</td>
+
+                    <td>${customer.idProof}</td>
+
+                    <td>${customer.address}</td>
+
+                </tr>
+
+            `;
+
+        });
+
+    }
+
+
+
+    /* BOOKING OPTIONS */
+
+    function updateBookingOptions() {
+
+        let customerSelect =
+            document.getElementById(
+                "bookingCustomer"
+            );
+
+        let roomSelect =
+            document.getElementById(
+                "bookingRoom"
+            );
+
+
+        customerSelect.innerHTML =
+            `<option value="">
+                Select Customer
+            </option>`;
+
+
+        roomSelect.innerHTML =
+            `<option value="">
+                Select Available Room
+            </option>`;
+
+
+        customers.forEach(customer => {
+
+            customerSelect.innerHTML += `
+
+                <option value="${customer.id}">
+
+                    ${customer.name}
+
+                </option>
+
+            `;
+
+        });
+
+
+        rooms
+            .filter(
+                room =>
+                room.status === "Available"
+            )
+            .forEach(room => {
+
+                roomSelect.innerHTML += `
+
+                    <option value="${room.id}">
+
+                        ${room.room}
+                        -
+                        ${room.type}
+                        -
+                        ₹${room.price}
+
+                    </option>
+
+                `;
+
+            });
+
+    }
+
+
+
+    /* ADD BOOKING */
+
+    function addBooking() {
+
+        let customer =
+            document.getElementById(
+                "bookingCustomer"
+            ).value;
+
+        let room =
+            document.getElementById(
+                "bookingRoom"
+            ).value;
+
+        let checkIn =
+            document.getElementById(
+                "checkIn"
+            ).value;
+
+        let checkOut =
+            document.getElementById(
+                "checkOut"
+            ).value;
+
+        let guests =
+            document.getElementById(
+                "guestCount"
+            ).value;
+
+
+        if (
+            customer === "" ||
+            room === "" ||
+            checkIn === "" ||
+            checkOut === ""
+        ) {
+
+            alert(
+                "Please fill all booking details"
+            );
+
+            return;
+
+        }
+
+
+        let selectedRoom =
+            rooms.find(
+                r => r.id == room
+            );
+
+
+        let selectedCustomer =
+            customers.find(
+                c => c.id == customer
+            );
+
+
+        bookings.push({
+
+            id: bookingId++,
+
+            customerId: customer,
+
+            customerName:
+                selectedCustomer.name,
+
+            roomId: room,
+
+            roomNo:
+                selectedRoom.room,
+
+            price:
+                selectedRoom.price,
+
+            checkIn: checkIn,
+
+            checkOut: checkOut,
+
+            guests: guests,
+
+            status: "Booked"
+
+        });
+
+
+        selectedRoom.status =
+            "Booked";
+
+
+        renderBookings();
+
+        renderRooms();
+
+        updateBookingOptions();
+
+        updateDashboard();
+
+
+        alert(
+            "Booking created successfully"
+        );
+
+    }
+
+
+
+    /* DISPLAY BOOKINGS */
+
+    function renderBookings() {
+
+        let table =
+            document.getElementById(
+                "bookingTable"
+            );
+
+        table.innerHTML = "";
+
+
+        bookings.forEach(booking => {
+
+            let action = "";
+
+
+            if (
+                booking.status === "Booked"
+            ) {
+
+                action = `
+
+                    <button
+                        class="small-btn green"
+                        onclick="checkIn(${booking.id})"
+                    >
+                        Check-In
+                    </button>
+
+                `;
+
+            }
+
+
+            if (
+                booking.status === "Checked-in"
+            ) {
+
+                action = `
+
+                    <button
+                        class="small-btn red"
+                        onclick="checkOut(${booking.id})"
+                    >
+                        Check-Out
+                    </button>
+
+                `;
+
+            }
+
+
+            table.innerHTML += `
+
+                <tr>
+
+                    <td>#${booking.id}</td>
+
+                    <td>
+                        ${booking.customerName}
+                    </td>
+
+                    <td>
+                        ${booking.roomNo}
+                    </td>
+
+                    <td>
+                        ${booking.checkIn}
+                    </td>
+
+                    <td>
+                        ${booking.checkOut}
+                    </td>
+
+                    <td>
+                        ${booking.guests}
+                    </td>
+
+                    <td>
+                        ${booking.status}
+                    </td>
+
+                    <td>
+
+                        ${action}
+
+                        <button
+                            class="small-btn gray"
+                            onclick="openBill(${booking.id})"
+                        >
+                            Bill
+                        </button>
+
+                    </td>
+
+                </tr>
+
+            `;
+
+        });
+
+    }
+
+
+
+    /* CHECK IN */
+
+    function checkIn(id) {
+
+        let booking =
+            bookings.find(
+                b => b.id === id
+            );
+
+
+        booking.status =
+            "Checked-in";
+
+
+        let room =
+            rooms.find(
+                r => r.id == booking.roomId
+            );
+
+
+        room.status =
+            "Occupied";
+
+
+        renderBookings();
+
+        renderRooms();
+
+        updateBookingOptions();
+
+    }
+
+
+
+    /* CHECK OUT */
+
+    function checkOut(id) {
+
+        let booking =
+            bookings.find(
+                b => b.id === id
+            );
+
+
+        booking.status =
+            "Checked-out";
+
+
+        let room =
+            rooms.find(
+                r => r.id == booking.roomId
+            );
+
+
+        room.status =
+            "Available";
+
+
+        renderBookings();
+
+        renderRooms();
+
+        updateBookingOptions();
+
+        openBill(id);
+
+    }
+
+
+
+    /* BILL */
+
+    function openBill(id) {
+
+        let booking =
+            bookings.find(
+                b => b.id === id
+            );
+
+
+        if (!booking)
+            return;
+
+
+        let checkIn =
+            new Date(
+                booking.checkIn
+            );
+
+        let checkOut =
+            new Date(
+                booking.checkOut
+            );
+
+
+        let nights =
+            Math.ceil(
+                (
+                    checkOut -
+                    checkIn
+                ) /
+                (1000 * 60 * 60 * 24)
+            );
+
+
+        if (nights < 1)
+            nights = 1;
+
+
+        let roomCharge =
+            booking.price *
+            nights;
+
+
+        document.getElementById(
+            "roomCharges"
+        ).innerText =
+            roomCharge;
+
+
+        calculateTotal();
+
+
+        showPageById("billing");
+
+    }
+
+
+
+    /* ADD SERVICE */
+
+    function addService() {
+
+        let name =
+            document.getElementById(
+                "serviceName"
+            ).value;
+
+        let amount =
+            Number(
+                document.getElementById(
+                    "serviceAmount"
+                ).value
+            );
+
+
+        if (
+            name === "" ||
+            !amount
+        ) {
+
+            alert(
+                "Enter service details"
+            );
+
+            return;
+
+        }
+
+
+        services.push({
+
+            name: name,
+
+            amount: amount
+
+        });
+
+
+        serviceTotal += amount;
+
+
+        document.getElementById(
+            "serviceName"
+        ).value = "";
+
+        document.getElementById(
+            "serviceAmount"
+        ).value = "";
+
+
+        renderServices();
+
+        calculateTotal();
+
+    }
+
+
+
+    /* SERVICES TABLE */
+
+    function renderServices() {
+
+        let table =
+            document.getElementById(
+                "serviceTable"
+            );
+
+        table.innerHTML = "";
+
+
+        services.forEach(service => {
+
+            table.innerHTML += `
+
+                <tr>
+
+                    <td>
+                        ${service.name}
+                    </td>
+
+                    <td>
+                        ₹${service.amount}
+                    </td>
+
+                </tr>
+
+            `;
+
+        });
+
+    }
+
+
+
+    /* TOTAL */
+
+    function calculateTotal() {
+
+        let roomCharge =
+            Number(
+                document.getElementById(
+                    "roomCharges"
+                ).innerText
+            );
+
+
+        document.getElementById(
+            "serviceCharges"
+        ).innerText =
+            serviceTotal;
+
+
+        document.getElementById(
+            "grandTotal"
+        ).innerText =
+            roomCharge +
+            serviceTotal;
+
+    }
+
+
+
+    /* SAVE BILL */
+
+    function saveBill() {
+
+        let total =
+            document.getElementById(
+                "grandTotal"
+            ).innerText;
+
+
+        alert(
+            "Bill saved successfully!\nTotal: ₹"
+            + total
+        );
+
+    }
+
+
+
+    /* REPORTS */
+
+    function renderReports() {
+
+        let table =
+            document.getElementById(
+                "reportTable"
+            );
+
+        table.innerHTML = "";
+
+
+        bookings.forEach(booking => {
+
+            table.innerHTML += `
+
+                <tr>
+
+                    <td>
+                        #${booking.id}
+                    </td>
+
+                    <td>
+                        ${booking.customerName}
+                    </td>
+
+                    <td>
+                        ${booking.roomNo}
+                    </td>
+
+                    <td>
+                        ${booking.checkIn}
+                    </td>
+
+                    <td>
+                        ${booking.checkOut}
+                    </td>
+
+                    <td>
+                        ${booking.status}
+                    </td>
+
+                    <td>
+                        ₹${booking.price}
+                    </td>
+
+                </tr>
+
+            `;
+
+        });
+
+    }
+
+
+
+    /* DASHBOARD */
+
+    function updateDashboard() {
+
+        document.getElementById(
+            "totalRooms"
+        ).innerText =
+            rooms.length;
+
+
+        document.getElementById(
+            "availableRooms"
+        ).innerText =
+            rooms.filter(
+                r => r.status === "Available"
+            ).length;
+
+
+        document.getElementById(
+            "totalCustomers"
+        ).innerText =
+            customers.length;
+
+
+        document.getElementById(
+            "totalBookings"
+        ).innerText =
+            bookings.length;
+
+    }
+
+
+
+    /* SHOW PAGE */
+
+    function showPageById(pageId) {
+
+        document
+            .querySelectorAll(".page")
+            .forEach(
+                page =>
+                page.classList.remove(
+                    "active"
+                )
+            );
+
+
+        document
+            .getElementById(pageId)
+            .classList.add("active");
+
+
+        document
+            .querySelectorAll(
+                ".nav-links button"
+            )
+            .forEach(
+                btn =>
+                btn.classList.remove(
+                    "active"
+                )
+            );
+
+    }
+
+
+    /* INITIAL DATA */
+
+    renderRooms();
+
+    updateDashboard();
+
+</script>
+<script src="/frontend.js"></script>
+
+</body>
+</html>
